@@ -1,0 +1,21 @@
+{
+	"flutter": {
+		"platforms": {
+			"android": {
+				"default": {
+					"projectId": "notifychat-a42d9",
+					"appId": "1:218049849161:android:0664e52c36374207a99c98",
+					"fileOutput": "android/app/google-services.json"
+				}
+			},
+			"dart": {
+				"lib/firebase_options.dart": {
+					"projectId": "notifychat-a42d9",
+					"configurations": {
+						"android": "1:218049849161:android:0664e52c36374207a99c98"
+					}
+				}
+			}
+		}
+	}
+}
