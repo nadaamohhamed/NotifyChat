@@ -158,6 +158,10 @@ http_parser
 2.12
 file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/http_parser-4.0.2/
 file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/http_parser-4.0.2/lib/
+intl
+3.3
+file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/intl-0.20.1/
+file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/intl-0.20.1/lib/
 leak_tracker
 3.2
 file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/leak_tracker-10.0.4/
@@ -304,6 +308,6 @@ file:///Users/nadamohammed/FlutterDev/flutter/packages/flutter_web_plugins/
 file:///Users/nadamohammed/FlutterDev/flutter/packages/flutter_web_plugins/lib/
 notifychat
 3.4
-file:///Users/nadamohammed/VSCodeProjects/FlutterProjects/notifychat/
-file:///Users/nadamohammed/VSCodeProjects/FlutterProjects/notifychat/lib/
+file:///Users/nadamohammed/GitHub/NotifyChat/notifychat/
+file:///Users/nadamohammed/GitHub/NotifyChat/notifychat/lib/
 2

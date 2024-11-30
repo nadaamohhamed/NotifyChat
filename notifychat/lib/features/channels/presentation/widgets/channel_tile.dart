@@ -91,8 +91,8 @@ class ChannelTile extends GetView<ChannelController> {
                       ),
                     ],
                   ),
-                  onTap: () {
-                    controller.toggleSubscription(channel, index);
+                  onTap: () async {
+                    await controller.toggleSubscription(channel, index);
                   },
                 ),
               ),

@@ -20,10 +20,10 @@ class ChatsView extends GetView<ChatsController> {
               horizontal: 16.w,
               vertical: 24.h,
             ),
-            child: controller.allChannels.isEmpty
+            child: controller.subscribedChannels.isEmpty
                 ? Center(
                     child: Text(
-                      'No chat rooms available yet.',
+                      'You haven’t subscribed to any channels yet, so there\'re no available chat rooms now.',
                       style: AppTextStyles.font18BlackKanit,
                       textAlign: TextAlign.center,
                     ),
@@ -40,10 +40,10 @@ class ChatsView extends GetView<ChatsController> {
                         ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: controller.allChannels.length,
+                          itemCount: controller.subscribedChannels.length,
                           itemBuilder: (context, index) {
                             return ChatsTile(
-                              channel: controller.allChannels[index],
+                              channel: controller.subscribedChannels[index],
                             );
                           },
                         ),

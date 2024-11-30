@@ -26,6 +26,7 @@ class ChatRoomView extends GetView<ChatsController> {
                 verticalSpace(12),
                 Expanded(
                   child: ListView.builder(
+                    controller: controller.listViewScrollController,
                     itemCount:
                         controller.selectedChatRoom!.chatRoomMessages.length,
                     itemBuilder: (context, index) {
@@ -63,6 +64,7 @@ class ChatRoomView extends GetView<ChatsController> {
                         ),
                         onPressed: () async {
                           await controller.sendMessage();
+                          controller.scrollToLastMessage();
                         },
                       ),
                     ],

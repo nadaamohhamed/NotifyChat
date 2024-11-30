@@ -23,11 +23,11 @@ class ChannelController extends GetxController {
   bool isLoading = true;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
 
     getAllChannels();
-    await getAllSubscribedChannels();
+    getAllSubscribedChannels();
   }
 
   getAllChannels() {
@@ -39,40 +39,39 @@ class ChannelController extends GetxController {
               (doc) => ChannelModel.fromMap(doc.data()),
             )
             .toList();
+        allChannels.sort((a, b) => a.createdAt.compareTo(b.createdAt));
         isLoading = false;
         update(['channels']);
-        Get.find<ChatsController>().setAllChannels(allChannels);
 
         // also update subscribed channels if any channel is deleted
         for (var channel in subscribedChannels) {
           if (!allChannels.map((item) => item.id).contains(channel.id)) {
-            removeChannelSubscription(channel);
+            int index =
+                allChannels.indexWhere((element) => element.id == channel.id);
+            removeChannelSubscription(channel, index);
           }
         }
       },
     );
   }
 
-  Future<void> getAllSubscribedChannels() async {
-    try {
-      final channelsSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userID)
-          .collection('subscribed_channels')
-          .get();
+  getAllSubscribedChannels() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userID)
+        .collection('subscribed_channels')
+        .snapshots()
+        .listen(
+      (event) async {
+        subscribedChannels = event.docs
+            .map(
+              (doc) => ChannelModel.fromMap(doc.data()),
+            )
+            .toList();
 
-      subscribedChannels = channelsSnapshot.docs
-          .map((doc) => ChannelModel.fromMap(doc.data()))
-          .toList();
-
-      for (var channel in subscribedChannels) {
-        await FirebaseMessaging.instance.subscribeToTopic(channel.name);
-      }
-
-      update(['channels']);
-    } catch (e) {
-      print('Error fetching subscribed channels: $e');
-    }
+        Get.find<ChatsController>().setSubscribedChannels(subscribedChannels);
+      },
+    );
   }
 
   isSubscribed(ChannelModel channel) {
@@ -84,6 +83,7 @@ class ChannelController extends GetxController {
       final newChannel = ChannelModel(
         name: channelNameController.text,
         description: channelDescriptionController.text,
+        createdAt: DateTime.now(),
       );
 
       Get.back();
@@ -115,38 +115,42 @@ class ChannelController extends GetxController {
     await Get.find<ChatsController>().removeChatRoom(channel);
   }
 
-  toggleSubscription(ChannelModel channel, index) async {
+  toggleSubscription(ChannelModel channel, int index) async {
     // update subscribed channels
     if (isSubscribed(channel)) {
-      await removeChannelSubscription(channel);
+      await removeChannelSubscription(channel, index);
       showSnackbar('Subscription removed',
           'You have unsubscribed from ${channel.name} successfully!');
     } else {
-      await addChannelSubscription(channel);
+      await addChannelSubscription(channel, index);
       showSnackbar('Subscription added',
           'You have subscribed to ${channel.name} successfully!');
     }
-
-    update(['$index']);
   }
 
-  addChannelSubscription(ChannelModel channel) async {
+  addChannelSubscription(ChannelModel channel, int index) async {
     var subscribedChannelsRef = FirebaseFirestore.instance
         .collection('users')
         .doc(userID)
         .collection('subscribed_channels');
 
     subscribedChannels.add(channel);
+
+    update(['$index']);
+
     await subscribedChannelsRef.doc(channel.id).set(channel.toMap());
     await FirebaseMessaging.instance.subscribeToTopic(channel.name);
   }
 
-  removeChannelSubscription(ChannelModel channel) async {
+  removeChannelSubscription(ChannelModel channel, int index) async {
     var subscribedChannelsRef = FirebaseFirestore.instance
         .collection('users')
         .doc(userID)
         .collection('subscribed_channels');
-    subscribedChannels.remove(channel);
+
+    subscribedChannels.removeWhere((item) => item.id == channel.id);
+    update(['$index']);
+
     await subscribedChannelsRef.doc(channel.id).delete();
     await FirebaseMessaging.instance.unsubscribeFromTopic(channel.name);
   }
@@ -155,8 +159,8 @@ class ChannelController extends GetxController {
     Get.snackbar(
       title,
       message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.turquoise,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: AppColors.purple,
       colorText: AppColors.white,
       isDismissible: true,
       duration: const Duration(seconds: 2),

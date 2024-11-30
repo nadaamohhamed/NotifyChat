@@ -260,6 +260,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "intl",
+      "rootUri": "file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/intl-0.20.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "leak_tracker",
       "rootUri": "file:///Users/nadamohammed/.pub-cache/hosted/pub.dev/leak_tracker-10.0.4",
       "packageUri": "lib/",
@@ -464,7 +470,7 @@
       "languageVersion": "3.4"
     }
   ],
-  "generated": "2024-11-29T18:43:08.733316Z",
+  "generated": "2024-11-30T08:28:03.017612Z",
   "generator": "pub",
   "generatorVersion": "3.4.3",
   "flutterRoot": "file:///Users/nadamohammed/FlutterDev/flutter",

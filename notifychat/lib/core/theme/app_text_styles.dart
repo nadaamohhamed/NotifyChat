@@ -4,8 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:notifychat/core/theme/app_colors.dart';
 
 abstract class AppTextStyles {
+  static TextStyle font8WhiteKanit = GoogleFonts.kanit(
+    fontSize: 8.sp,
+    color: AppColors.white,
+  );
+
   static TextStyle font10BlackKanit = GoogleFonts.kanit(
-    fontSize: 10.sp,
+    fontSize: 8.sp,
     color: AppColors.black,
   );
 

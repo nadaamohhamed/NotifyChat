@@ -15,7 +15,7 @@ class ChatRoomModel {
     return ChatRoomModel(
       roomName: map['roomName'] as String,
       channelTopicId: map['channelTopicId'] as String,
-      chatRoomMessages: (map['chatRoomMessages'] as List<dynamic>)
+      chatRoomMessages: (map['chatRoomMessages'] as List<dynamic>? ?? [])
           .map((e) => MessageModel.fromMap(Map<String, dynamic>.from(e as Map)))
           .toList(),
     );

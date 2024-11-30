@@ -10,11 +10,14 @@ import 'package:notifychat/features/chat/data/models/message_model.dart';
 import 'package:notifychat/features/home/logic/home_controller.dart';
 
 class ChatsController extends GetxController {
-  List<ChannelModel> allChannels = Get.find<ChannelController>().allChannels;
+  List<ChannelModel> subscribedChannels =
+      Get.find<ChannelController>().subscribedChannels;
 
   TextEditingController newMessageController = TextEditingController();
 
   ChatRoomModel? selectedChatRoom;
+
+  ScrollController listViewScrollController = ScrollController();
 
   setSelectedChatRoom(ChannelModel channel) async {
     try {
@@ -25,14 +28,12 @@ class ChatsController extends GetxController {
       if (!snapshot.exists) {
         // if the chat room does not exist, create it
         createChatRoom(channel);
+      } else {
+        setData(snapshot.value);
       }
-      // listen for changes in the chat room
+      // add listener for changes in the chat room
       db.onValue.listen((event) {
-        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-        final chatRoom = ChatRoomModel.fromMap(data);
-
-        selectedChatRoom = chatRoom;
-        update(['chatRoom']);
+        setData(event.snapshot.value);
       });
     } catch (e) {
       // temporary dummy chat room if there is an error to not break the UI by selectChatRoom
@@ -43,6 +44,14 @@ class ChatsController extends GetxController {
       );
       print('Error fetching or creating chat room: $e');
     }
+  }
+
+  void setData(snapshot) {
+    final data = Map<String, dynamic>.from(snapshot as Map);
+    final chatRoom = ChatRoomModel.fromMap(data);
+
+    selectedChatRoom = chatRoom;
+    update(['chatRoom']);
   }
 
   createChatRoom(ChannelModel channel) {
@@ -85,6 +94,15 @@ class ChatsController extends GetxController {
     }
   }
 
+  scrollToLastMessage() {
+    listViewScrollController.animateTo(
+      listViewScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.fastOutSlowIn,
+    );
+    update(['chatRoom']);
+  }
+
   // used if the channel is deleted to remove the corresponding chat room
   removeChatRoom(ChannelModel channel) async {
     final channelID = channel.id;
@@ -98,8 +116,8 @@ class ChatsController extends GetxController {
     }
   }
 
-  void setAllChannels(List<ChannelModel> channels) {
-    allChannels = channels;
+  void setSubscribedChannels(List<ChannelModel> channels) {
+    subscribedChannels = channels;
     update(['chats']);
   }
 }
