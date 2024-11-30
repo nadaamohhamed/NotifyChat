@@ -41,8 +41,8 @@
 
 1. **Clone the repository:**
    ```
-   git clone https://github.com/yourusername/flutter-firebase-chat-app.git
-   cd flutter-firebase-chat-app
+   git clone https://github.com/nadaamohhamed/NotifyChat.git
+   cd notifychat
    ```
 2. **Install dependencies:**
 
