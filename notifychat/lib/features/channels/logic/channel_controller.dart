@@ -3,7 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:notifychat/core/theme/app_colors.dart';
 import 'package:notifychat/features/channels/data/models/channel_model.dart';
 import 'package:notifychat/features/chat/logic/chats_controller.dart';
 import 'package:notifychat/features/home/logic/home_controller.dart';
@@ -124,11 +123,11 @@ class ChannelController extends GetxController {
     // update subscribed channels
     if (isSubscribed(channel)) {
       await removeChannelSubscription(channel, index);
-      showSnackbar('Subscription removed',
+      Get.find<HomeController>().showSnackbar('Subscription removed',
           'You have unsubscribed from ${channel.name} successfully!');
     } else {
       await addChannelSubscription(channel, index);
-      showSnackbar('Subscription added',
+      Get.find<HomeController>().showSnackbar('Subscription added',
           'You have subscribed to ${channel.name} successfully!');
     }
   }
@@ -158,17 +157,5 @@ class ChannelController extends GetxController {
 
     await subscribedChannelsRef.doc(channel.id).delete();
     await FirebaseMessaging.instance.unsubscribeFromTopic(channel.name);
-  }
-
-  showSnackbar(String title, String message) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: AppColors.purple,
-      colorText: AppColors.white,
-      isDismissible: true,
-      duration: const Duration(seconds: 2),
-    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notifychat/core/helpers/getx_cache_helper.dart';
+import 'package:notifychat/core/theme/app_colors.dart';
 import 'package:notifychat/features/channels/presentation/views/channels_view.dart';
 import 'package:notifychat/features/chat/presentation/views/chats_view.dart';
 import 'package:notifychat/features/notifications/presentation/views/notifications_view.dart';
@@ -37,5 +38,18 @@ class HomeController extends GetxController {
   void changePage(int index) {
     currentIndex = index;
     update(['home']);
+  }
+
+  showSnackbar(String title, String message) async {
+    await Get.closeCurrentSnackbar();
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: AppColors.purple,
+      colorText: AppColors.white,
+      isDismissible: true,
+      duration: const Duration(seconds: 2),
+    );
   }
 }
