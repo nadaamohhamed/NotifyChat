@@ -23,7 +23,7 @@ class ChatsView extends GetView<ChatsController> {
             child: controller.subscribedChannels.isEmpty
                 ? Center(
                     child: Text(
-                      'You haven’t subscribed to any channels yet, so there\'re no available chat rooms now.',
+                      'You haven’t subscribed to any channels, so there\'re no available chat rooms yet.',
                       style: AppTextStyles.font18BlackKanit,
                       textAlign: TextAlign.center,
                     ),

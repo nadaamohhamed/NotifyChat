@@ -21,6 +21,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // initialize Firebase notifications
   NotificationFirebaseApi.initNotifications();
 
   // run the app

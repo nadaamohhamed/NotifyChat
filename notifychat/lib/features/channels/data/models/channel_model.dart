@@ -5,12 +5,14 @@ class ChannelModel {
   final String name;
   final String description;
   final DateTime createdAt;
+  final String adminId;
 
   ChannelModel({
     String? id,
     required this.name,
     required this.description,
     required this.createdAt,
+    required this.adminId,
   }) : id = id ?? const Uuid().v4();
 
   factory ChannelModel.fromMap(Map<String, dynamic> map) {
@@ -21,6 +23,7 @@ class ChannelModel {
       createdAt: DateTime.parse(
         map['createdAt'] as String,
       ),
+      adminId: map['adminId'] as String,
     );
   }
 
@@ -30,6 +33,7 @@ class ChannelModel {
       'name': name,
       'description': description,
       'createdAt': createdAt.toIso8601String(),
+      'adminId': adminId,
     };
   }
 }

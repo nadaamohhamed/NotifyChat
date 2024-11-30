@@ -78,12 +78,17 @@ class ChannelController extends GetxController {
     return subscribedChannels.map((item) => item.id).contains(channel.id);
   }
 
+  isAdminOfChannel(ChannelModel channel) {
+    return channel.adminId == userID;
+  }
+
   submitForm() async {
     if (channelFormKey.currentState!.validate()) {
       final newChannel = ChannelModel(
         name: channelNameController.text,
         description: channelDescriptionController.text,
         createdAt: DateTime.now(),
+        adminId: userID,
       );
 
       Get.back();

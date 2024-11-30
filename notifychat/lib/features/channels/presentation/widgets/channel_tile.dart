@@ -26,11 +26,15 @@ class ChannelTile extends GetView<ChannelController> {
             padding: EdgeInsetsDirectional.only(bottom: 12.h),
             child: Dismissible(
               key: Key(channel.id),
-              direction: DismissDirection.endToStart,
-              resizeDuration: const Duration(milliseconds: 200),
-              onDismissed: (direction) async {
-                await controller.removeChannel(channel);
-              },
+              // delete channel only if the user is the admin of the channel
+              direction: controller.isAdminOfChannel(channel)
+                  ? DismissDirection.endToStart
+                  : DismissDirection.none,
+              onDismissed: controller.isAdminOfChannel(channel)
+                  ? ((direction) async {
+                      await controller.removeChannel(channel);
+                    })
+                  : null,
               background: Container(
                 alignment: AlignmentDirectional.centerEnd,
                 decoration: BoxDecoration(
