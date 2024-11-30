@@ -23,9 +23,9 @@
 ## 🔧 Prerequisites
 
 - Flutter SDK installed on your machine.
-- Firebase project set up in [Firebase](https://firebase.google.com/).
+- Firebase project set up in [Firebase](https://firebase.google.com/) (Android).
 - Firebase Cloud Messaging enabled for your project.
-- An Android emulator / IOS simulator, or a real device to run the app.
+- An Android emulator or a real android device to run the app.
 
 ## 📱 How to Use
 
@@ -58,7 +58,7 @@
    flutter pub get
    ```
 
-3. **Set up Firebase for your platform (Android, iOS, or Web) and configure it according to the Firebase setup instructions.**
+3. **Set up Firebase specifically for (Android) and configure it according to the Firebase setup instructions for the Android platform.**
 4. **Run the app:**
    ```
    flutter run

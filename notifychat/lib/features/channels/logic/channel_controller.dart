@@ -108,6 +108,8 @@ class ChannelController extends GetxController {
         .collection('channels')
         .doc(channel.id)
         .set(channel.toMap());
+    Get.find<HomeController>().showSnackbar('Channel added',
+        'You have added ${channel.name} channel successfully!');
   }
 
   removeChannel(ChannelModel channel) async {
@@ -117,6 +119,8 @@ class ChannelController extends GetxController {
         .delete();
 
     await Get.find<ChatsController>().removeChatRoom(channel);
+    Get.find<HomeController>().showSnackbar('Channel removed',
+        'You have removed ${channel.name} channel successfully!');
   }
 
   toggleSubscription(ChannelModel channel, int index) async {

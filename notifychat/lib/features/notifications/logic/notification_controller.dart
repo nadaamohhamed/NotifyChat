@@ -63,5 +63,8 @@ class NotificationController extends GetxController {
         .collection('notifications')
         .doc(id)
         .delete();
+
+    Get.find<HomeController>().showSnackbar('Notification deleted',
+        'You have deleted the notification successfully!');
   }
 }
