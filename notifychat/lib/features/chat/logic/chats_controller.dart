@@ -15,10 +15,16 @@ class ChatsController extends GetxController {
 
   TextEditingController newMessageController = TextEditingController();
 
-  ChatRoomModel? selectedChatRoom;
+  // temporary dummy chat room first before setting the actual chat room
+  ChatRoomModel selectedChatRoom = ChatRoomModel(
+    roomName: '',
+    channelTopicId: '-1',
+    chatRoomMessages: [],
+  );
 
   ScrollController listViewScrollController = ScrollController();
 
+  // called before navigating to the chat room screen
   setSelectedChatRoom(ChannelModel channel) async {
     try {
       final db = FirebaseDatabase.instance.ref('/chatRooms/${channel.id}/');
@@ -36,12 +42,6 @@ class ChatsController extends GetxController {
         setData(event.snapshot.value);
       });
     } catch (e) {
-      // temporary dummy chat room if there is an error to not break the UI by selectChatRoom
-      selectedChatRoom = ChatRoomModel(
-        roomName: 'Chat Room',
-        channelTopicId: '0',
-        chatRoomMessages: [],
-      );
       print('Error fetching or creating chat room: $e');
     }
   }
@@ -66,7 +66,7 @@ class ChatsController extends GetxController {
   sendMessage() async {
     if (newMessageController.text.isEmpty) return;
 
-    final userID = Get.find<HomeController>().userID!;
+    final userID = Get.find<HomeController>().userID;
     final newMessage = MessageModel(
       sentTime: DateTime.now(),
       senderID: userID,
@@ -74,7 +74,7 @@ class ChatsController extends GetxController {
     );
 
     // add message to chat room channel
-    selectedChatRoom!.chatRoomMessages.add(newMessage);
+    selectedChatRoom.chatRoomMessages.add(newMessage);
     update(['chatRoom']);
 
     newMessageController.clear();
@@ -83,14 +83,24 @@ class ChatsController extends GetxController {
   }
 
   updateChatRoomFirebase() async {
-    // update firebase realtime database
-    final channelID = selectedChatRoom!.channelTopicId;
-    final db = FirebaseDatabase.instance.ref('/chatRooms/$channelID/');
-
     try {
-      await db.set(selectedChatRoom!.toMap());
+      // update firebase realtime database
+      final channelID = selectedChatRoom.channelTopicId;
+      final db = FirebaseDatabase.instance.ref('/chatRooms/$channelID/');
+      await db.set(selectedChatRoom.toMap());
     } catch (e) {
       print('Error updating chat room: $e');
+    }
+  }
+
+  // used if the channel is deleted to remove the corresponding chat room
+  removeChatRoom(ChannelModel channel) async {
+    try {
+      final channelID = channel.id;
+      final db = FirebaseDatabase.instance.ref('/chatRooms/$channelID/');
+      await db.remove();
+    } catch (e) {
+      print('Error removing chat room: $e');
     }
   }
 
@@ -101,19 +111,6 @@ class ChatsController extends GetxController {
       curve: Curves.fastOutSlowIn,
     );
     update(['chatRoom']);
-  }
-
-  // used if the channel is deleted to remove the corresponding chat room
-  removeChatRoom(ChannelModel channel) async {
-    final channelID = channel.id;
-    final db = FirebaseDatabase.instance.ref('/chatRooms/$channelID/');
-
-    try {
-      await db.remove();
-      print('Chat room removed successfully for channel: $channelID');
-    } catch (e) {
-      print('Error removing chat room: $e');
-    }
   }
 
   void setSubscribedChannels(List<ChannelModel> channels) {

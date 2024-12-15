@@ -15,7 +15,7 @@ class ChatRoomView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: controller.selectedChatRoom!.roomName),
+      appBar: CustomAppBar(title: controller.selectedChatRoom.roomName),
       body: GetBuilder<ChatsController>(
           id: 'chatRoom',
           builder: (controller) {
@@ -28,10 +28,10 @@ class ChatRoomView extends GetView<ChatsController> {
                   child: ListView.builder(
                     controller: controller.listViewScrollController,
                     itemCount:
-                        controller.selectedChatRoom!.chatRoomMessages.length,
+                        controller.selectedChatRoom.chatRoomMessages.length,
                     itemBuilder: (context, index) {
                       final message =
-                          controller.selectedChatRoom!.chatRoomMessages[index];
+                          controller.selectedChatRoom.chatRoomMessages[index];
                       return MessageBubble(message: message);
                     },
                   ),

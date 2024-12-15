@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:notifychat/core/routes/app_routes.dart';
 import 'package:notifychat/features/home/logic/home_controller.dart';
 import 'package:notifychat/features/notifications/data/models/notification_model.dart';
@@ -48,17 +47,21 @@ abstract class NotificationFirebaseApi {
   static Future initLocalNotifications() async {
     const android = AndroidInitializationSettings('@drawable/ic_launcher');
     const settings = InitializationSettings(android: android);
-    await _localNotifications.initialize(
-      settings,
-      onDidReceiveNotificationResponse: (notification) async {
-        if (notification.payload != null) {
-          final message =
-              RemoteMessage.fromMap(jsonDecode(notification.payload!));
+    try {
+      await _localNotifications.initialize(
+        settings,
+        onDidReceiveNotificationResponse: (notification) async {
+          if (notification.payload != null) {
+            final message =
+                RemoteMessage.fromMap(jsonDecode(notification.payload!));
 
-          handleMessage(message);
-        }
-      },
-    );
+            handleMessage(message);
+          }
+        },
+      );
+    } catch (e) {
+      print('Error initializing local notifications: $e');
+    }
 
     final platform = _localNotifications.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()!;
@@ -73,6 +76,7 @@ abstract class NotificationFirebaseApi {
       sound: true,
     );
 
+    // when app is terminated
     _firebaseMessaging.getInitialMessage().then((message) {
       if (message == null) {
         return;
@@ -123,7 +127,7 @@ abstract class NotificationFirebaseApi {
       },
     );
 
-    // when app is in the background and opened
+    // when app is in the background and not terminated
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       handleMessage(message);
 

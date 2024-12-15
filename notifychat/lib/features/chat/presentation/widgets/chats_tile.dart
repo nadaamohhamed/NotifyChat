@@ -51,7 +51,7 @@ class ChatsTile extends StatelessWidget {
           ),
           onTap: () async {
             await Get.find<ChatsController>().setSelectedChatRoom(channel);
-            // navigate to chat room with this channel
+            // navigate to chat room
             Get.toNamed(AppRoutes.chatRoom);
           },
         ),

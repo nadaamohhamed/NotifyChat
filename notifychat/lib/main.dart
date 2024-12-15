@@ -1,7 +1,5 @@
 import 'package:notifychat/core/helpers/getx_cache_helper.dart';
 import 'package:notifychat/features/notifications/logic/notification_firebase_api.dart';
-import 'package:notifychat/features/home/logic/home_bindings.dart';
-import 'package:notifychat/features/home/presentation/views/home_view.dart';
 import 'package:notifychat/firebase_options.dart';
 import 'package:notifychat/core/routes/app_pages.dart';
 
@@ -37,10 +35,9 @@ class NotifyChat extends StatelessWidget {
       minTextAdapt: true,
       builder: (_, child) {
         return GetMaterialApp(
+          initialRoute: AppPages.initial,
           debugShowCheckedModeBanner: false,
           title: 'NotifyChat',
-          initialBinding: HomeBindings(),
-          home: const HomeView(),
           getPages: AppPages.routes,
         );
       },

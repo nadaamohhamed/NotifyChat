@@ -29,7 +29,7 @@ class MessageModel {
   }
 
   bool get isSentByMe {
-    final currentUserID = Get.find<HomeController>().userID!;
+    final currentUserID = Get.find<HomeController>().userID;
     return senderID == currentUserID;
   }
 }

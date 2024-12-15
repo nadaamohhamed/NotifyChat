@@ -9,9 +9,13 @@ abstract class AppTextStyles {
     color: AppColors.white,
   );
 
-  static TextStyle font10BlackKanit = GoogleFonts.kanit(
+  static TextStyle font8BlackKanit = GoogleFonts.kanit(
     fontSize: 8.sp,
     color: AppColors.black,
+  );
+  static TextStyle font10WhiteKanit = GoogleFonts.kanit(
+    fontSize: 10.sp,
+    color: AppColors.white,
   );
 
   static TextStyle font14BlackKanit = GoogleFonts.kanit(
@@ -51,6 +55,12 @@ abstract class AppTextStyles {
   static TextStyle font24WhiteKanit = GoogleFonts.kanit(
     fontSize: 24.sp,
     color: AppColors.white,
+  );
+
+  static TextStyle font24BlackW700Kanit = GoogleFonts.kanit(
+    fontSize: 24.sp,
+    color: AppColors.black,
+    fontWeight: FontWeight.w700,
   );
 
   static TextStyle font32BlackKanit = GoogleFonts.kanit(

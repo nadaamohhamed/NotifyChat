@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ import 'package:notifychat/features/home/logic/home_controller.dart';
 
 class ChannelController extends GetxController {
   List<ChannelModel> allChannels = [];
-  String userID = Get.find<HomeController>().userID!;
+  String userID = Get.find<HomeController>().userID;
 
   // list of all subscribed channels
   List<ChannelModel> subscribedChannels = [];
@@ -21,6 +22,8 @@ class ChannelController extends GetxController {
 
   bool isLoading = true;
 
+  final analytics = FirebaseAnalytics.instance;
+
   @override
   void onInit() {
     super.onInit();
@@ -28,6 +31,34 @@ class ChannelController extends GetxController {
     getAllChannels();
     getAllSubscribedChannels();
   }
+
+  //  ------------------------- Analytics Methods -----------------------------
+
+  logUserSubscription(
+    action,
+    channelName,
+  ) async {
+    await analytics.logEvent(
+      name:
+          action == 'subscribe' ? 'channel_subscribed' : 'channel_unsubscribed',
+      parameters: {
+        'channel_name': channelName,
+        'action': action,
+      },
+    );
+  }
+
+  // custom event to log when channel created
+  logChannelCreated(channelName) async {
+    await analytics.logEvent(
+      name: 'channel_created',
+      parameters: {
+        'channel_name': channelName,
+      },
+    );
+  }
+
+  // ---------------------------------------------------------------------------
 
   getAllChannels() {
     FirebaseFirestore.instance.collection('channels').snapshots().listen(
@@ -51,6 +82,9 @@ class ChannelController extends GetxController {
           }
         }
       },
+      onError: (error) {
+        print('Error fetching channels: $error');
+      },
     );
   }
 
@@ -69,6 +103,9 @@ class ChannelController extends GetxController {
             .toList();
 
         Get.find<ChatsController>().setSubscribedChannels(subscribedChannels);
+      },
+      onError: (error) {
+        print('Error fetching subscribed channels: $error');
       },
     );
   }
@@ -104,23 +141,32 @@ class ChannelController extends GetxController {
   }
 
   addChannel(ChannelModel channel) async {
-    await FirebaseFirestore.instance
-        .collection('channels')
-        .doc(channel.id)
-        .set(channel.toMap());
-    Get.find<HomeController>().showSnackbar('Channel added',
-        'You have added ${channel.name} channel successfully!');
+    try {
+      await FirebaseFirestore.instance
+          .collection('channels')
+          .doc(channel.id)
+          .set(channel.toMap());
+      Get.find<HomeController>().showSnackbar('Channel added',
+          'You have added ${channel.name} channel successfully!');
+      await logChannelCreated(channel.name);
+    } catch (e) {
+      print('Error adding channel: $e');
+    }
   }
 
   removeChannel(ChannelModel channel) async {
-    await FirebaseFirestore.instance
-        .collection('channels')
-        .doc(channel.id)
-        .delete();
+    try {
+      await FirebaseFirestore.instance
+          .collection('channels')
+          .doc(channel.id)
+          .delete();
 
-    await Get.find<ChatsController>().removeChatRoom(channel);
-    Get.find<HomeController>().showSnackbar('Channel removed',
-        'You have removed ${channel.name} channel successfully!');
+      await Get.find<ChatsController>().removeChatRoom(channel);
+      Get.find<HomeController>().showSnackbar('Channel removed',
+          'You have removed ${channel.name} channel successfully!');
+    } catch (e) {
+      print('Error removing channel: $e');
+    }
   }
 
   toggleSubscription(ChannelModel channel, int index) async {
@@ -137,29 +183,39 @@ class ChannelController extends GetxController {
   }
 
   addChannelSubscription(ChannelModel channel, int index) async {
-    var subscribedChannelsRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userID)
-        .collection('subscribed_channels');
+    try {
+      var subscribedChannelsRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .collection('subscribed_channels');
 
-    subscribedChannels.add(channel);
+      subscribedChannels.add(channel);
 
-    update(['$index']);
+      update(['$index']);
 
-    await subscribedChannelsRef.doc(channel.id).set(channel.toMap());
-    await FirebaseMessaging.instance.subscribeToTopic(channel.name);
+      await subscribedChannelsRef.doc(channel.id).set(channel.toMap());
+      await FirebaseMessaging.instance.subscribeToTopic(channel.name);
+      await logUserSubscription('subscribe', channel.name);
+    } catch (e) {
+      print('Error adding channel subscription: $e');
+    }
   }
 
   removeChannelSubscription(ChannelModel channel, int index) async {
-    var subscribedChannelsRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userID)
-        .collection('subscribed_channels');
+    try {
+      var subscribedChannelsRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .collection('subscribed_channels');
 
-    subscribedChannels.removeWhere((item) => item.id == channel.id);
-    update(['$index']);
+      subscribedChannels.removeWhere((item) => item.id == channel.id);
+      update(['$index']);
 
-    await subscribedChannelsRef.doc(channel.id).delete();
-    await FirebaseMessaging.instance.unsubscribeFromTopic(channel.name);
+      await subscribedChannelsRef.doc(channel.id).delete();
+      await FirebaseMessaging.instance.unsubscribeFromTopic(channel.name);
+      await logUserSubscription('unsubscribe', channel.name);
+    } catch (e) {
+      print('Error removing channel subscription: $e');
+    }
   }
 }
