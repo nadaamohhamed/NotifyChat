@@ -9,7 +9,7 @@ jobs:
   distribute_to_firebase:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout my repo code
+      - name: Checkout repository code
         uses: actions/checkout@v2
 
       - name: Set up JDK 21
@@ -28,11 +28,11 @@ jobs:
         with:
           ruby-version: "2.6.10"
           bundler-cache: true
-          working-directory: android
+          working-directory: notifychat/android
 
       - name: Build and Distribute App
         env:
           FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
         run: |
           bundle exec fastlane android firebase_distribution
-        working-directory: android
+        working-directory: notifychat/android
