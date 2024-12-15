@@ -51,6 +51,7 @@ class AuthController extends GetxController
   }
 
   logFirstLogin(loginMethod) async {
+    print('First login: ${isFirstLogin()}');
     if (isFirstLogin()) {
       await analytics.logEvent(
         name: 'first_time_login',
@@ -58,6 +59,7 @@ class AuthController extends GetxController
           'login_method': loginMethod,
         },
       );
+      print('Logged first time login done');
     }
   }
 
@@ -110,7 +112,7 @@ class AuthController extends GetxController
 
   signupWithEmail() async {
     if (emailFormKey.currentState!.validate() &&
-        ValidationHelper.hasMin8Characters(passwordController.text) &&
+        ValidationHelper.hasMinXCharacters(passwordController.text, 8) &&
         ValidationHelper.validateEmail(emailController.text)) {
       try {
         final credentials = await auth.createUserWithEmailAndPassword(
@@ -133,9 +135,9 @@ class AuthController extends GetxController
           email: emailController.text,
           password: passwordController.text,
         );
+        await logFirstLogin('email');
 
         await Get.offAllNamed(AppRoutes.home);
-        await logFirstLogin('email');
 
         resetEmailControllers();
       } // handle exceptions
