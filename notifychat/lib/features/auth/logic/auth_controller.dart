@@ -135,11 +135,11 @@ class AuthController extends GetxController
           email: emailController.text,
           password: passwordController.text,
         );
-        await logFirstLogin('email');
 
         await Get.offAllNamed(AppRoutes.home);
 
         resetEmailControllers();
+        await logFirstLogin('email');
       } // handle exceptions
       on FirebaseAuthException catch (e) {
         handleSignupEmailExceptions(e);
