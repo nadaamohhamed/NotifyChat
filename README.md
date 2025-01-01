@@ -42,29 +42,6 @@
 - Firebase Cloud Messaging enabled for your project.
 - An Android emulator or a real android device to run the app.
 
-## 📱 How to Use
-
-1. **Authentication:**
-   - Use one of the three methods to register and log in:
-     - Google Authentication: Seamless login/registration with your Google account.
-     - Mobile Number Authentication: Verify your mobile number via OTP.
-     - Email and Password Authentication: Traditional email-based registration and login.
-2. **Firebase Push Notifications:**
-   - You are able to subscribe to channels (topics) to receive targeted notifications.
-   - Test notifications can be sent from the Firebase Console to all users, specific topics, or specific devices.
-   - Dismiss notifications by dragging the notification tile from end to start.
-   - View all the notifications you received with relevant content (e.g., new messages, channel updates) instantly on the notifications page.
-3. **Subscription and Unsubscription:**
-   - You can subscribe or unsubscribe to channels directly from the UI.
-   - The app will handle storing your subscriptions in Firestore for persistence.
-4. **Channel Controls:**
-   - You can add new channels via a `+` button on the channels page, enabling dynamic channel creation.
-   - Only the admin of a channel (the one who created or added it) can remove the channel by dragging the channel tile from end to start, allowing for easy deletion of channels.
-   - View all available channels in a list view, which displays all active channels you are subscribed to or can join.
-5. **Real-Time Messaging:**
-   - Each channel has a chat room created in the Firebase Realtime Database.
-   - You have the option to send messages that are immediately visible to other subscribed users who joined the room.
-
 ## 🚀 How to Run
 
 1. **Clone the repository:**
@@ -83,18 +60,6 @@
    ```
    flutter run
    ```
-
-## 🛠️ CI/CD Workflow
-
-**Automated Build and Deployment**
-
-- GitHub Actions:
-  - GitHub Actions is configured to automatically trigger builds when changes are pushed to the **main** branch of the repository.
-  - The pipeline runs tests, builds the app, and uploads the build to Firebase App Distribution.
-- Fastlane:
-  - Fastlane handles signing and packaging of the app for Firebase App Distribution.
-- Firebase App Distribution:
-  - The latest app versions are automatically delivered to testers for seamless access and feedback.
 
 ## 📲 App Preview
 
