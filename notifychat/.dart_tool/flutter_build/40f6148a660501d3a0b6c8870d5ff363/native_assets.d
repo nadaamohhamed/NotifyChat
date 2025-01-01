@@ -1,1 +1,0 @@
- /Users/nadamohammed/GitHub/NotifyChat/notifychat/.dart_tool/flutter_build/40f6148a660501d3a0b6c8870d5ff363/native_assets.yaml: 

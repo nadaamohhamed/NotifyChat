@@ -95,3 +95,9 @@
   - Fastlane handles signing and packaging of the app for Firebase App Distribution.
 - Firebase App Distribution:
   - The latest app versions are automatically delivered to testers for seamless access and feedback.
+
+## 📲 App Preview
+
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/8532fc6d-4385-4e25-94e7-e9677d8e7c2e" />
+</div>
